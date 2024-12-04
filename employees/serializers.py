@@ -5,18 +5,22 @@ from django.core.validators import EmailValidator
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True, validators=[EmailValidator()])
+
     class Meta:
         model = Employee
         fields = ['id', 'first_name', 'last_name', 'email']
-        extra_kwargs = {
-            'email': {'required': True, 'validators': [EmailValidator()]}}
+        # extra_kwargs = {
+        #     'email': {'required': True, 'validators': [EmailValidator()]}}
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
-        fields = ['username', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ('username', 'password')
+        # extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
